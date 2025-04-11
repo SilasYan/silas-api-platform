@@ -1,0 +1,33 @@
+server:
+  port: 8124
+spring:
+  application:
+    name: silas-api-gateway
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+      config:
+        group: DEFAULT_GROUP
+#        namespace: 4d1e2c49-638e-42d3-88b4-d06143c6a24b
+        prefix: application-gateway
+        file-extension: yaml
+        refresh-enabled: true
+        preference: remote
+
+# 以下配置指定了应用的名称、使用的协议（Dubbo）、注册中心的类型（Nacos）和地址
+dubbo:
+  application:
+    # 设置应用的名称
+    name: silas-api-gateway-dubbo
+  # 指定使用 Dubbo 协议，且端口设置为 -1，表示随机分配可用端口
+  protocol:
+    name: dubbo
+    port: -1
+  registry:
+    address: nacos://${spring.cloud.nacos.discovery.server-addr}
+    group: ${spring.cloud.nacos.config.group}
+#    parameters:
+#      namespace: ${spring.cloud.nacos.config.namespace}

@@ -1,0 +1,10 @@
+logging:
+  config: classpath:logback-spring.xml
+  file:
+    path: ./logs/gateway
+  level:
+    org:
+      springframework:
+        cloud:
+          gateway:
+            filter: info

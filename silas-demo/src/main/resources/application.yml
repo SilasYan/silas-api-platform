@@ -1,0 +1,6 @@
+server:
+  port: 8125
+silas:
+  config:
+    access-key: baolong
+    secret-key: baolong
