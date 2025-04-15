@@ -40,5 +40,7 @@ build/
 ### Custom ###
 logs/
 **/src/test/
+**/src/main/resources/application.yml
 **/src/main/resources/application-local.yml
 **/src/main/resources/application-prod.yml
+/silas-ui/

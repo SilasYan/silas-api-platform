@@ -22,10 +22,16 @@ public class SignUtil {
 	 * @return 签名
 	 */
 	public static String sign(String accessKey, String secretKey, String nonce, String timestamp, String body) {
+		System.out.println("[SilasSdk accessKey] " + accessKey);
+		System.out.println("[SilasSdk secretKey] " + secretKey);
+		System.out.println("[SilasSdk nonce] " + nonce);
+		System.out.println("[SilasSdk timestamp] " + timestamp);
+		System.out.println("[SilasSdk params]" + body);
 		String originStr = accessKey + secretKey + nonce + timestamp;
 		if (StrUtil.isNotEmpty(body)) {
 			originStr += body;
 		}
+		System.out.println("[SilasSdk Sign] " + originStr);
 		return new Digester(DigestAlgorithm.SHA256).digestHex(originStr);
 	}
 }

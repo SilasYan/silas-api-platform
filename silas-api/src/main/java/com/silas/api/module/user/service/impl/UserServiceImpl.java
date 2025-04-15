@@ -20,7 +20,6 @@ import com.silas.api.common.exception.BusinessException;
 import com.silas.api.common.exception.ThrowUtil;
 import com.silas.api.common.page.PageRequest;
 import com.silas.api.common.page.PageResponse;
-import com.silas.api.common.redis.RedisUtil;
 import com.silas.api.common.response.RespCode;
 import com.silas.api.common.utils.LambdaUtil;
 import com.silas.api.common.utils.ServletUtil;
@@ -45,6 +44,7 @@ import com.silas.api.module.user.mapper.UserMapper;
 import com.silas.api.module.user.service.UserLoginLogService;
 import com.silas.api.module.user.service.UserPointsLogService;
 import com.silas.api.module.user.service.UserService;
+import com.silas.api.redis.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -163,11 +163,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public String login(UserLoginRequest userLoginRequest) {
-		String redisKey = String.format(KeyConstant.PREFIX_CAPTCHA_CODE, userLoginRequest.getCaptchaKey());
-		String code = redisUtil.get(redisKey);
-		if (StrUtil.isEmpty(code) || !code.equals(userLoginRequest.getCaptchaValue())) {
-			throw new BusinessException(RespCode.ERROR_PARAMETER, TextConstant.ERROR_CODE);
-		}
+		// String redisKey = String.format(KeyConstant.PREFIX_CAPTCHA_CODE, userLoginRequest.getCaptchaKey());
+		// String code = redisUtil.get(redisKey);
+		// if (StrUtil.isEmpty(code) || !code.equals(userLoginRequest.getCaptchaValue())) {
+		// 	throw new BusinessException(RespCode.ERROR_PARAMETER, TextConstant.ERROR_CODE);
+		// }
 		String account = userLoginRequest.getAccount();
 		User user = this.getOne(new LambdaQueryWrapper<User>()
 				.eq(User::getUserAccount, account)
@@ -214,7 +214,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
 		// 登录态保存以及信息存入缓存
 		StpUtil.login(userId);
-		redisUtil.delete(redisKey);
+		// redisUtil.delete(redisKey);
 		redisUtil.set(String.format(KeyConstant.PREFIX_USER_INFO, userId), user, KeyConstant.USER_INFO_TIME, TimeUnit.DAYS);
 		// 异步记录日志
 		userLoginLogService.recordLoginLog(userId, loginTime, ServletUtil.getIp(), ServletUtil.getHeader("User-Agent"));
@@ -227,7 +227,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 	@Override
 	public void logout() {
 		Long userId = SaTokenUtil.getUserId();
-		String redisKey = String.format(KeyConstant.PREFIX_CAPTCHA_CODE, userId);
+		String redisKey = String.format(KeyConstant.PREFIX_USER_INFO, userId);
 		boolean result = redisUtil.delete(redisKey);
 		if (result) {
 			StpUtil.logout(userId);
@@ -498,20 +498,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 	/**
 	 * 获取查询条件构造器
 	 *
-	 * @param userQueryRequest 用户查询请求对象
+	 * @param queryRequest 查询请求对象
 	 * @return 查询条件构造器
 	 */
 	@SneakyThrows
 	@Override
-	public LambdaQueryWrapper<User> lambdaQueryWrapper(UserQueryRequest userQueryRequest) {
-		Long id = userQueryRequest.getId();
-		String userAccount = userQueryRequest.getUserAccount();
-		String userEmail = userQueryRequest.getUserEmail();
-		String userPhone = userQueryRequest.getUserPhone();
-		String userName = userQueryRequest.getUserName();
-		String userProfile = userQueryRequest.getUserProfile();
-		String userRole = userQueryRequest.getUserRole();
-		Integer isDisabled = userQueryRequest.getIsDisabled();
+	public LambdaQueryWrapper<User> lambdaQueryWrapper(UserQueryRequest queryRequest) {
+		Long id = queryRequest.getId();
+		String userAccount = queryRequest.getUserAccount();
+		String userEmail = queryRequest.getUserEmail();
+		String userPhone = queryRequest.getUserPhone();
+		String userName = queryRequest.getUserName();
+		String userProfile = queryRequest.getUserProfile();
+		String userRole = queryRequest.getUserRole();
+		Integer isDisabled = queryRequest.getIsDisabled();
 		LambdaQueryWrapper<User> lambdaQueryWrapper = new LambdaQueryWrapper<>();
 		lambdaQueryWrapper.eq(ObjUtil.isNotNull(id), User::getId, id);
 		lambdaQueryWrapper.eq(StrUtil.isNotEmpty(userAccount), User::getUserAccount, userAccount);
@@ -522,8 +522,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 		lambdaQueryWrapper.eq(StrUtil.isNotEmpty(userRole), User::getUserRole, userRole);
 		lambdaQueryWrapper.eq(ObjUtil.isNotNull(isDisabled), User::getIsDisabled, isDisabled);
 
-		String startEditTime = userQueryRequest.getStartEditTime();
-		String endEditTime = userQueryRequest.getEndEditTime();
+		String startEditTime = queryRequest.getStartEditTime();
+		String endEditTime = queryRequest.getEndEditTime();
 		if (StrUtil.isNotEmpty(startEditTime) && StrUtil.isNotEmpty(endEditTime)) {
 			Date startTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(startEditTime);
 			Date endTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(endEditTime);
@@ -532,8 +532,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 		}
 
 		// 处理排序规则
-		if (userQueryRequest.isMultipleSort()) {
-			List<PageRequest.Sort> sorts = userQueryRequest.getSorts();
+		if (queryRequest.isMultipleSort()) {
+			List<PageRequest.Sort> sorts = queryRequest.getSorts();
 			if (CollUtil.isNotEmpty(sorts)) {
 				sorts.forEach(sort -> {
 					String sortField = sort.getField();
@@ -544,7 +544,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 				});
 			}
 		} else {
-			PageRequest.Sort sort = userQueryRequest.getSort();
+			PageRequest.Sort sort = queryRequest.getSort();
 			if (sort != null) {
 				String sortField = sort.getField();
 				boolean sortAsc = sort.isAsc();
@@ -568,5 +568,33 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 	public PageResponse<UserVO> getUserPage(UserQueryRequest userQueryRequest) {
 		Page<User> page = this.page(userQueryRequest.page(User.class), this.lambdaQueryWrapper(userQueryRequest));
 		return PageResponse.to(page, UserVO.class);
+	}
+
+	/**
+	 * 扣除积分
+	 *
+	 * @param userId 用户ID
+	 * @param points 积分
+	 * @return 是否扣除成功
+	 */
+	@Override
+	public boolean deductUserPoints(Long userId, Integer points) {
+		return this.update(new LambdaUpdateWrapper<User>().eq(User::getId, userId)
+				.setSql("points = points - " + points)
+		);
+	}
+
+	/**
+	 * 增加积分
+	 *
+	 * @param userId 用户ID
+	 * @param points 积分
+	 * @return 是否增加成功
+	 */
+	@Override
+	public boolean increasePoints(Long userId, Integer points) {
+		return this.update(new LambdaUpdateWrapper<User>().eq(User::getId, userId)
+				.setSql("points = points + " + points)
+		);
 	}
 }

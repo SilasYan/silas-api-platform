@@ -54,31 +54,62 @@ public enum RespCode {
 	NOT_AUTH(403, "无权限"),
 
 	/**
-	 * 网关错误
+	 * 参数不完整
 	 */
-	ERROR_BAD_GATEWAY(502, "网关错误"),
-	/**
-	 * 流量限制
-	 */
-	RATE_LIMIT_EXCEEDED(50200, "流量限制"),
-
-	/**
-	 * API密钥无效
-	 */
-	ERROR_INVALID_API_KEY(1001, "API密钥无效"),
-	/**
-	 * 签名认证失败
-	 */
-	ERROR_SIGNATURE(1002, "签名认证失败"),
-
-	/**
-	 * 参数无效
-	 */
-	ERROR_INVALID_PARAMETER(2001, "参数无效"),
+	ERROR_INVALID_PARAMETER(2001, "参数不完整"),
 	/**
 	 * 接口服务无效
 	 */
 	ERROR_INVALID_SERVICE(2002, "接口服务无效"),
+
+	/**
+	 * 网关错误
+	 */
+	ERROR_BAD_GATEWAY(50200, "网关错误"),
+	/**
+	 * 流量限制
+	 */
+	RATE_LIMIT_EXCEEDED(50201, "流量限制"),
+	/**
+	 * 非法请求
+	 */
+	ERROR_ILLEGAL_REQUEST(50202, "非法请求"),
+	/**
+	 * 缺少头信息
+	 */
+	ERROR_MISSING_HEADER(51001, "缺少头信息"),
+	/**
+	 * AccessKey 密钥无效
+	 */
+	ERROR_ACCESS_KEY(51002, "AccessKey 密钥无效"),
+	/**
+	 * 签名认证失败
+	 */
+	ERROR_SIGNATURE(51003, "签名认证失败"),
+	/**
+	 * 当前IP已拉黑
+	 */
+	ERROR_IP_BLACKLIST(51004, "当前IP已拉黑"),
+	/**
+	 * 请求时间戳超时
+	 */
+	ERROR_TIMESTAMP_TIMEOUT(52001, "请求时间戳超时"),
+	/**
+	 * 随机数重复
+	 */
+	ERROR_NONCE_REPEAT(52002, "随机数重复"),
+	/**
+	 * 接口不存在
+	 */
+	ERROR_API_NOT_EXIST(52003, "接口不存在"),
+	/**
+	 * 积分不足
+	 */
+	ERROR_POINTS_NOT_ENOUGH(2004, "积分不足"),
+	/**
+	 * 扣减积分异常
+	 */
+	ERROR_POINTS_DEDUCTION_EXCEPTION(2005, "扣减积分异常"),
 	;
 
 	/**

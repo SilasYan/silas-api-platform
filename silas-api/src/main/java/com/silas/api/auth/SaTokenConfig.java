@@ -1,4 +1,4 @@
-package com.silas.api.config;
+package com.silas.api.auth;
 
 import cn.dev33.satoken.interceptor.SaInterceptor;
 import cn.dev33.satoken.jwt.StpLogicJwtForSimple;
@@ -40,7 +40,16 @@ public class SaTokenConfig implements WebMvcConfigurer {
 		registry.addInterceptor(new SaInterceptor(handler -> {
 							HttpServletRequest request = ServletUtil.getRequest();
 							if (request != null) {
+								// 排除OPTIONS请求
+								if ("OPTIONS".equals(ServletUtil.getRequest().getMethod())) {
+									return;
+								}
 								System.out.println("--------------地址: " + request.getRequestURI());
+								// Enumeration<String> headerNames = request.getHeaderNames();
+								// while (headerNames.hasMoreElements()) {
+								// 	String headerName = headerNames.nextElement();
+								// 	System.out.println(headerName + ": " + request.getHeader(headerName));
+								// }
 							}
 							SaRouter.match("/**")
 									// 排除掉的 path 列表，可以写多个

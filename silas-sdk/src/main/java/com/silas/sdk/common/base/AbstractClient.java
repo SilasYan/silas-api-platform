@@ -124,6 +124,10 @@ public abstract class AbstractClient {
 		String url = config.getBaseurl() + path;
 		int connectTimeout = config.getConnectTimeout();
 		int readTimeout = config.getReadTimeout();
+
+		System.out.println(method);
+		System.out.println(url);
+
 		return switch (method) {
 			case HttpConst.POST -> HttpRequest.post(url)
 					.header("Content-Type", "application/json")

@@ -1,4 +1,4 @@
-package com.silas.api.common.redis;
+package com.silas.api.redis;
 
 import jakarta.annotation.Resource;
 import org.springframework.data.redis.core.HashOperations;

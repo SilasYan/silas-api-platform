@@ -1,6 +1,8 @@
 package com.silas.sdk;
 
 import com.silas.sdk.common.model.SilasSdkConfig;
+import com.silas.sdk.silas.SilasClient;
+import com.silas.sdk.silas.SilasClientImpl;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -43,7 +45,7 @@ public class SilasSdk {
 	private String readTimeout = "60000";
 
 	@Bean
-	public SilasSdkConfig getConfig() {
+	public SilasSdkConfig silasSdkConfig() {
 		return SilasSdkConfig.builder()
 				.accessKey(accessKey)
 				.secretKey(secretKey)
@@ -51,5 +53,10 @@ public class SilasSdk {
 				.connectTimeout(Integer.parseInt(connectTimeout))
 				.readTimeout(Integer.parseInt(readTimeout))
 				.build();
+	}
+
+	@Bean
+	public SilasClient commonClient(SilasSdkConfig silasSdkConfig) {
+		return new SilasClientImpl(silasSdkConfig);
 	}
 }

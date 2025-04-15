@@ -1,8 +1,13 @@
 package com.silas.api.aop;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.silas.api.common.constant.HttpConstant;
+import com.silas.api.common.exception.BusinessException;
+import com.silas.api.common.response.RespCode;
 import com.silas.api.common.utils.ServletUtil;
+import com.silas.api.redis.RedisUtil;
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +34,10 @@ import java.util.stream.Collectors;
 @Aspect
 @Component
 public class RequestAspect {
+
+	@Resource
+	private RedisUtil redisUtil;
+
 	@Around("@within(org.springframework.web.bind.annotation.RestController)"
 			+ "||@within(org.springframework.stereotype.Controller)")
 	public Object after(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -39,7 +48,17 @@ public class RequestAspect {
 		HttpServletRequest request = requestAttributes.getRequest();
 		log.info("↓↓↓↓↓↓↓↓↓↓ 请求日志 ↓↓↓↓↓↓↓↓↓↓");
 		log.info("IP 地址: {}", ServletUtil.getIp(request));
-		log.info("跟踪ID: {}", request.getHeader(HttpConstant.TRACE_ID_HEADER));
+
+		String traceId = request.getHeader(HttpConstant.HEADER_TRACE_ID);
+		log.info("traceId: {}", traceId);
+		String gatewayInfo = request.getHeader(HttpConstant.HEADER_GATEWAY_INFO);
+		log.info("网关信息: {}", gatewayInfo);
+		String silasApiGatewayInfo = redisUtil.get(String.format(HttpConstant.SILAS_API_GATEWAY_INFO_KEY, traceId));
+		if (StrUtil.isBlank(silasApiGatewayInfo) || !silasApiGatewayInfo.equals(gatewayInfo)) {
+			log.error("[网关信息] 非法请求");
+			throw new BusinessException(RespCode.ERROR_ILLEGAL_REQUEST);
+		}
+
 		log.info("请求接口: [{}] {}", request.getMethod(), request.getRequestURI());
 		log.info("请求方法: {}.{}", joinPoint.getSignature().getDeclaringType().getSimpleName()
 				, joinPoint.getSignature().getName());

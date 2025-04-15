@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.silas.api.module.api.mapper.ApiInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.silas.api.module.api.entity.ApiInfo">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="apiName" column="api_name" jdbcType="VARCHAR"/>
+        <result property="apiUrl" column="api_url" jdbcType="VARCHAR"/>
+        <result property="apiHost" column="api_host" jdbcType="VARCHAR"/>
+        <result property="apiStatus" column="api_status" jdbcType="TINYINT"/>
+        <result property="apiDescription" column="api_description" jdbcType="VARCHAR"/>
+        <result property="requestMethod" column="request_method" jdbcType="VARCHAR"/>
+        <result property="requestHeader" column="request_header" jdbcType="VARCHAR"/>
+        <result property="responseHeader" column="response_header" jdbcType="VARCHAR"/>
+        <result property="userId" column="user_id" jdbcType="BIGINT"/>
+        <result property="requiredPoints" column="required_points" jdbcType="INTEGER"/>
+        <result property="invokeCount" column="invoke_count" jdbcType="INTEGER"/>
+        <result property="isDelete" column="is_delete" jdbcType="TINYINT"/>
+        <result property="editTime" column="edit_time" jdbcType="TIMESTAMP"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,api_name,api_url,
+        api_host,api_status,api_description,
+        request_method,request_header,response_header,
+        user_id,required_points,invoke_count,
+        is_delete,edit_time,create_time,
+        update_time
+    </sql>
+</mapper>

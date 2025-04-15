@@ -111,10 +111,10 @@ public interface UserService extends IService<User> {
 	/**
 	 * 获取查询条件构造器
 	 *
-	 * @param userQueryRequest 用户查询请求对象
+	 * @param queryRequest 查询请求对象
 	 * @return 查询条件构造器
 	 */
-	LambdaQueryWrapper<User> lambdaQueryWrapper(UserQueryRequest userQueryRequest);
+	LambdaQueryWrapper<User> lambdaQueryWrapper(UserQueryRequest queryRequest);
 
 	/**
 	 * 获取用户分页
@@ -123,4 +123,22 @@ public interface UserService extends IService<User> {
 	 * @return 用户分页
 	 */
 	PageResponse<UserVO> getUserPage(UserQueryRequest userQueryRequest);
+
+	/**
+	 * 扣除积分
+	 *
+	 * @param userId 用户ID
+	 * @param points 积分
+	 * @return 是否扣除成功
+	 */
+	boolean deductUserPoints(Long userId, Integer points);
+
+	/**
+	 * 增加积分
+	 *
+	 * @param userId 用户ID
+	 * @param points 积分
+	 * @return 是否增加成功
+	 */
+	boolean increasePoints(Long userId, Integer points);
 }

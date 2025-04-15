@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author Silas Yan 2025-04-06:00:31
  */
-@Tag(name = "用户接口", description = "用户相关接口")
+@Tag(name = "UserApi", description = "用户相关接口")
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -62,10 +62,10 @@ public class UserController {
 		if (userPassword.length() < BaseConstant.EIGHT) {
 			throw new BusinessException(RespCode.ERROR_PARAMETER, "密码长度不能小于8位!");
 		}
-		String captchaKey = userLoginRequest.getCaptchaKey();
-		ThrowUtil.tif(StrUtil.isBlank(captchaKey), RespCode.ERROR_PARAMETER, "图形验证码KEY不能为空!");
-		String captchaValue = userLoginRequest.getCaptchaValue();
-		ThrowUtil.tif(StrUtil.isBlank(captchaValue), RespCode.ERROR_PARAMETER, "图形验证码不能为空!");
+		// String captchaKey = userLoginRequest.getCaptchaKey();
+		// ThrowUtil.tif(StrUtil.isBlank(captchaKey), RespCode.ERROR_PARAMETER, "图形验证码KEY不能为空!");
+		// String captchaValue = userLoginRequest.getCaptchaValue();
+		// ThrowUtil.tif(StrUtil.isBlank(captchaValue), RespCode.ERROR_PARAMETER, "图形验证码不能为空!");
 		return Result.success("登录成功!", userService.login(userLoginRequest));
 	}
 

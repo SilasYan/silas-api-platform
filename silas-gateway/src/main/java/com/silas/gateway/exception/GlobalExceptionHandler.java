@@ -14,7 +14,6 @@ import org.springframework.core.io.buffer.DataBufferFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebExceptionHandler;
@@ -33,10 +32,6 @@ public class GlobalExceptionHandler implements WebExceptionHandler {
 
 	@Override
 	public Mono<Void> handle(ServerWebExchange exchange, Throwable ex) {
-		ServerHttpRequest request = exchange.getRequest();
-		log.info("请求地址: {}", request.getURI());
-		log.info("请求路径: {}", request.getPath());
-
 		ServerHttpResponse response = exchange.getResponse();
 		HttpHeaders headers = response.getHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
@@ -49,11 +44,11 @@ public class GlobalExceptionHandler implements WebExceptionHandler {
 		if (ex instanceof BusinessException) {
 			response.setStatusCode(HttpStatus.BAD_GATEWAY);
 			error = Result.failed(((BusinessException) ex).getCode(), ex.getMessage());
-			log.error("【自定义异常】：{}", ex.getMessage());
+			// log.error("[网关异常] 业务错误: {}", ex.getMessage());
 		} else {
 			response.setStatusCode(HttpStatus.BAD_GATEWAY);
 			error = Result.failed(RespCode.ERROR_BAD_GATEWAY);
-			log.error("【网关异常】：{}", ex.getMessage());
+			// log.error("[网关异常] {}", ex.getMessage());
 		}
 
 		try {
@@ -61,7 +56,7 @@ public class GlobalExceptionHandler implements WebExceptionHandler {
 			DataBuffer dataBuffer = bufferFactory.wrap(errorBytes);
 			return response.writeWith(Mono.just(dataBuffer));
 		} catch (JsonProcessingException e) {
-			log.error("JSON序列化异常：{}", e.getMessage());
+			log.error("[网关异常] JSON 序列化失败: {}", e.getMessage());
 			return Mono.error(e);
 		}
 	}

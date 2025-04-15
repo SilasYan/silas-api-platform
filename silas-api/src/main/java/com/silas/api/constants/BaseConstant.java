@@ -21,7 +21,9 @@ public interface BaseConstant {
 	int ELEVEN = 11;
 	int TWELVE = 12;
 	int TWENTY = 20;
+	int ONT_HUNDRED_TWENTY = 120;
 	int TWO_HUNDRED_FIFTY = 250;
+	int FIVE_HUNDRED = 500;
 
 	String EMPTY = "";
 

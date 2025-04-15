@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.silas.api.module.api.mapper.ApiInvokeLogMapper">
+
+    <resultMap id="BaseResultMap" type="com.silas.api.module.api.entity.ApiInvokeLog">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="apiId" column="api_id" jdbcType="BIGINT"/>
+        <result property="apiName" column="api_name" jdbcType="VARCHAR"/>
+        <result property="userId" column="user_id" jdbcType="BIGINT"/>
+        <result property="callerIp" column="caller_ip" jdbcType="VARCHAR"/>
+        <result property="traceId" column="trace_id" jdbcType="VARCHAR"/>
+        <result property="nonce" column="nonce" jdbcType="VARCHAR"/>
+        <result property="timestamp" column="timestamp" jdbcType="VARCHAR"/>
+        <result property="sign" column="sign" jdbcType="VARCHAR"/>
+        <result property="invokeTime" column="invoke_time" jdbcType="TIMESTAMP"/>
+        <result property="requestUri" column="request_uri" jdbcType="VARCHAR"/>
+        <result property="requestPath" column="request_path" jdbcType="VARCHAR"/>
+        <result property="requestMethod" column="request_method" jdbcType="VARCHAR"/>
+        <result property="requestHeaders" column="request_headers" jdbcType="VARCHAR"/>
+        <result property="requestParams" column="request_params" jdbcType="VARCHAR"/>
+        <result property="responseResult" column="response_result" jdbcType="VARCHAR"/>
+        <result property="invokeStatus" column="invoke_status" jdbcType="INTEGER"/>
+        <result property="consumePoints" column="consume_points" jdbcType="INTEGER"/>
+        <result property="timeConsuming" column="time_consuming" jdbcType="BIGINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,api_id,api_name,
+        user_id,caller_ip,trace_id,
+        nonce,timestamp,sign,
+        invoke_time,request_uri,request_path,
+        request_method,request_headers,request_params,
+        response_result,invoke_status,consume_points,
+        time_consuming,create_time,update_time
+    </sql>
+</mapper>

@@ -1,0 +1,34 @@
+server:
+  port: 8123
+  servlet:
+    context-path: /silas-api
+spring:
+  application:
+    name: silas-api
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+      config:
+        group: DEFAULT_GROUP
+        # 不配置默认也就是 spring:application:name
+#        prefix: silas-api
+        file-extension: yaml
+# 以下配置指定了应用的名称、使用的协议（Dubbo）、注册中心的类型（Nacos）和地址
+dubbo:
+  consumer:
+    # 单位毫秒
+    timeout: 10000
+  application:
+    # 设置应用的名称
+    name: silas-api-dubbo
+    qos-enable: false  # 关闭 QOS
+  # 指定使用 Dubbo 协议，且端口设置为 -1，表示随机分配可用端口
+  protocol:
+    name: dubbo
+    port: -1
+  registry:
+    address: nacos://${spring.cloud.nacos.discovery.server-addr}
+    group: ${spring.cloud.nacos.config.group}

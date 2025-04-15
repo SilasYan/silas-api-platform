@@ -4,3 +4,4 @@ silas:
   config:
     access-key: baolong
     secret-key: baolong
+    baseurl: http://192.168.0.107:8124

@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author Silas Yan 2025-04-12:00:57
  */
-@Tag(name = "管理员-用户接口", description = "管理员才可以使用")
+@Tag(name = "AdminUserApi", description = "管理员才可以使用")
 @RestController
 @RequestMapping("/admin/user")
 public class AdminUserController {

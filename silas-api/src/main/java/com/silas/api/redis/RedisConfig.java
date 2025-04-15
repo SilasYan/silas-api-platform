@@ -1,4 +1,4 @@
-package com.silas.api.common.redis;
+package com.silas.api.redis;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;

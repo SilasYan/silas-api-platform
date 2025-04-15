@@ -43,10 +43,10 @@ public class HttpUtils {
 	 */
 	public static Map<String, String> buildHeader(String accessKey, String secretKey, String requestParams) {
 		HashMap<String, String> requestHeadersMap = new HashMap<>(8);
-		requestHeadersMap.put("X-AccessKey", accessKey);
+		requestHeadersMap.put("X-Access-Key", accessKey);
 		requestHeadersMap.put("X-Trace-Id", UUID.randomUUID().toString());
 		String nonce = RandomUtil.randomString(16);
-		String timestamp = String.valueOf(System.currentTimeMillis() / 1000);
+		String timestamp = String.valueOf(System.currentTimeMillis());
 		requestHeadersMap.put("X-Nonce", nonce);
 		requestHeadersMap.put("X-Timestamp", timestamp);
 		requestHeadersMap.put("X-Sign", SignUtil.sign(accessKey, secretKey, nonce, timestamp, requestParams));
@@ -73,7 +73,7 @@ public class HttpUtils {
 		return originRequestParams.entrySet().stream()
 				.filter(entry -> entry.getValue() != null)
 				// 按Key排序
-				.sorted(Map.Entry.comparingByKey())
+				// .sorted(Map.Entry.comparingByKey())
 				.map(entry ->
 						encodeParam(entry.getKey()) + "=" + encodeParam(convertToString(entry.getValue())))
 				.collect(Collectors.joining("&"));
